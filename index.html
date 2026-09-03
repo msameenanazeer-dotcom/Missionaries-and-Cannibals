@@ -1,0 +1,774 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Missionaries and Cannibals AI Problem</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(#dff3ff, #ffffff);
+    text-align: center;
+}
+
+h1 {
+    color: #163a5f;
+}
+
+.container {
+    width: 95%;
+    max-width: 1100px;
+    margin: 25px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.problem {
+    background: #eef8ff;
+    padding: 15px;
+    border-radius: 12px;
+    font-size: 18px;
+}
+
+/* GAME AREA */
+
+.game {
+    position: relative;
+    margin-top: 25px;
+    min-height: 430px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+}
+
+/* BANKS */
+
+.bank {
+    width: 32%;
+    min-height: 430px;
+    padding: 15px;
+    background: #8bd17c;
+    border: 3px solid #4d9b45;
+}
+
+.bank h2 {
+    color: #174b1b;
+}
+
+/* RIVER */
+
+.river {
+    width: 36%;
+    min-height: 430px;
+    background: #42a5f5;
+    position: relative;
+    overflow: hidden;
+}
+
+.river h2 {
+    color: white;
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background: rgba(255,255,255,0.5);
+    animation: waveMove 3s infinite linear;
+}
+
+.wave1 {
+    top: 100px;
+}
+
+.wave2 {
+    top: 180px;
+}
+
+.wave3 {
+    top: 270px;
+}
+
+@keyframes waveMove {
+    from {
+        transform: translateX(-50px);
+    }
+    to {
+        transform: translateX(50px);
+    }
+}
+
+/* PEOPLE */
+
+.people {
+    min-height: 260px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    gap: 10px;
+}
+
+/* CHARACTER */
+
+.person {
+    width: 75px;
+    height: 105px;
+    position: relative;
+    display: inline-block;
+    transition: transform 0.4s;
+}
+
+.person:hover {
+    transform: scale(1.1);
+}
+
+/* HEAD */
+
+.head {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #f2c49b;
+    position: absolute;
+    top: 5px;
+    left: 19px;
+    border: 2px solid #333;
+}
+
+/* BODY */
+
+.body {
+    width: 45px;
+    height: 52px;
+    position: absolute;
+    top: 42px;
+    left: 15px;
+    border-radius: 15px 15px 5px 5px;
+    border: 2px solid #333;
+}
+
+/* MISSIONARY */
+
+.missionary .body {
+    background: white;
+}
+
+.missionary .cross {
+    position: absolute;
+    top: 51px;
+    left: 33px;
+    font-size: 22px;
+    color: #b22222;
+    font-weight: bold;
+}
+
+/* CANNIBAL */
+
+.cannibal .head {
+    background: #8d5524;
+}
+
+.cannibal .body {
+    background: #e85d04;
+}
+
+.cannibal .bone {
+    position: absolute;
+    top: 48px;
+    left: 24px;
+    font-size: 25px;
+}
+
+/* LABEL */
+
+.label {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+/* BOAT */
+
+.boat {
+    position: absolute;
+    width: 150px;
+    height: 65px;
+    background: #8b4513;
+    border-radius: 10px 10px 70px 70px;
+    bottom: 65px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 1.2s ease;
+    border: 3px solid #5c2e0b;
+    z-index: 10;
+}
+
+.boat.left {
+    left: 12%;
+}
+
+.boat.right {
+    left: 88%;
+}
+
+.boat-people {
+    position: absolute;
+    top: -45px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* MOVEMENT */
+
+.movement {
+    margin: 20px;
+    min-height: 45px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #d62828;
+}
+
+/* BUTTONS */
+
+button {
+    padding: 12px 25px;
+    margin: 5px;
+    border: none;
+    border-radius: 8px;
+    background: #163a5f;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #2874a6;
+}
+
+/* STEPS */
+
+.steps {
+    text-align: left;
+    margin-top: 25px;
+    background: #f5f7fa;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.step {
+    padding: 10px;
+    margin: 6px 0;
+    background: white;
+    border-left: 5px solid #2874a6;
+    border-radius: 5px;
+}
+
+.active {
+    background: #d8f3dc !important;
+    border-left-color: #2a9d8f;
+    font-weight: bold;
+}
+
+/* LEGEND */
+
+.legend {
+    margin: 20px;
+    font-size: 18px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>⛵ Missionaries and Cannibals Problem</h1>
+
+<div class="problem">
+    <b>AI Problem:</b><br>
+    Three Missionaries and three Cannibals are on one side
+    of a river. A boat can carry a maximum of two people.
+    The goal is to move everyone safely to the other side.
+    <br><br>
+    <b>Rule:</b> Cannibals must never outnumber Missionaries
+    on either bank when Missionaries are present.
+</div>
+
+
+<div class="legend">
+    👨‍⚕️ Missionary &nbsp;&nbsp;&nbsp;
+    🧟 Cannibal &nbsp;&nbsp;&nbsp;
+    ⛵ Boat
+</div>
+
+
+<!-- GAME -->
+
+<div class="game">
+
+    <!-- LEFT BANK -->
+
+    <div class="bank">
+
+        <h2>🌳 LEFT BANK</h2>
+
+        <div id="leftPeople" class="people"></div>
+
+    </div>
+
+
+    <!-- RIVER -->
+
+    <div class="river">
+
+        <h2>🌊 RIVER</h2>
+
+        <div class="wave wave1"></div>
+        <div class="wave wave2"></div>
+        <div class="wave wave3"></div>
+
+        <div id="boat" class="boat left">
+
+            <div id="boatPeople" class="boat-people"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RIGHT BANK -->
+
+    <div class="bank">
+
+        <h2>🏠 RIGHT BANK</h2>
+
+        <div id="rightPeople" class="people"></div>
+
+    </div>
+
+</div>
+
+
+<div id="movement" class="movement">
+    Click "Start Solution"
+</div>
+
+
+<button onclick="startSolution()">
+    ▶ Start Solution
+</button>
+
+<button onclick="nextStep()">
+    ➡ Next Step
+</button>
+
+<button onclick="resetGame()">
+    🔄 Reset
+</button>
+
+
+<!-- SOLUTION -->
+
+<div class="steps">
+
+<h2>📋 Solution Steps</h2>
+
+<div class="step" id="step0">
+0. Initial State → 3M 3C | 0M 0C
+</div>
+
+<div class="step" id="step1">
+1. ⛵ 2 Cannibals cross → 3M 1C | 0M 2C
+</div>
+
+<div class="step" id="step2">
+2. ⛵ 1 Cannibal returns ← 3M 2C | 0M 1C
+</div>
+
+<div class="step" id="step3">
+3. ⛵ 2 Cannibals cross → 3M 0C | 0M 3C
+</div>
+
+<div class="step" id="step4">
+4. ⛵ 1 Cannibal returns ← 3M 1C | 0M 2C
+</div>
+
+<div class="step" id="step5">
+5. ⛵ 2 Missionaries cross → 1M 1C | 2M 2C
+</div>
+
+<div class="step" id="step6">
+6. ⛵ 1 Missionary + 1 Cannibal return ← 2M 2C | 1M 1C
+</div>
+
+<div class="step" id="step7">
+7. ⛵ 2 Missionaries cross → 0M 2C | 3M 1C
+</div>
+
+<div class="step" id="step8">
+8. ⛵ 1 Cannibal returns ← 0M 3C | 3M 0C
+</div>
+
+<div class="step" id="step9">
+9. ⛵ 2 Cannibals cross → 0M 1C | 3M 2C
+</div>
+
+<div class="step" id="step10">
+10. ⛵ 1 Cannibal returns ← 0M 2C | 3M 1C
+</div>
+
+<div class="step" id="step11">
+11. ⛵ 2 Cannibals cross → 0M 0C | 3M 3C 🎉
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/*
+    Create Missionary picture
+*/
+function missionary() {
+
+    return `
+    <div class="person missionary">
+
+        <div class="head"></div>
+
+        <div class="body"></div>
+
+        <div class="cross">✚</div>
+
+        <div class="label">Missionary</div>
+
+    </div>
+    `;
+}
+
+
+/*
+    Create Cannibal picture
+*/
+function cannibal() {
+
+    return `
+    <div class="person cannibal">
+
+        <div class="head"></div>
+
+        <div class="body"></div>
+
+        <div class="bone">🦴</div>
+
+        <div class="label">Cannibal</div>
+
+    </div>
+    `;
+}
+
+
+/*
+    Make people
+*/
+function createPeople(missionaries, cannibals) {
+
+    let html = "";
+
+    for(let i = 0; i < missionaries; i++) {
+        html += missionary();
+    }
+
+    for(let i = 0; i < cannibals; i++) {
+        html += cannibal();
+    }
+
+    return html;
+}
+
+
+/*
+    States
+
+    leftM = Missionaries on left
+    leftC = Cannibals on left
+    rightM = Missionaries on right
+    rightC = Cannibals on right
+*/
+
+const states = [
+
+    {
+        leftM: 3,
+        leftC: 3,
+        rightM: 0,
+        rightC: 0,
+        boat: "left",
+        movement: "Initial State: Everyone is on the LEFT bank."
+    },
+
+    {
+        leftM: 3,
+        leftC: 1,
+        rightM: 0,
+        rightC: 2,
+        boat: "right",
+        movement: "➡ 2 Cannibals cross the river"
+    },
+
+    {
+        leftM: 3,
+        leftC: 2,
+        rightM: 0,
+        rightC: 1,
+        boat: "left",
+        movement: "⬅ 1 Cannibal returns"
+    },
+
+    {
+        leftM: 3,
+        leftC: 0,
+        rightM: 0,
+        rightC: 3,
+        boat: "right",
+        movement: "➡ 2 Cannibals cross the river"
+    },
+
+    {
+        leftM: 3,
+        leftC: 1,
+        rightM: 0,
+        rightC: 2,
+        boat: "left",
+        movement: "⬅ 1 Cannibal returns"
+    },
+
+    {
+        leftM: 1,
+        leftC: 1,
+        rightM: 2,
+        rightC: 2,
+        boat: "right",
+        movement: "➡ 2 Missionaries cross the river"
+    },
+
+    {
+        leftM: 2,
+        leftC: 2,
+        rightM: 1,
+        rightC: 1,
+        boat: "left",
+        movement: "⬅ 1 Missionary + 1 Cannibal return"
+    },
+
+    {
+        leftM: 0,
+        leftC: 2,
+        rightM: 3,
+        rightC: 1,
+        boat: "right",
+        movement: "➡ 2 Missionaries cross the river"
+    },
+
+    {
+        leftM: 0,
+        leftC: 3,
+        rightM: 3,
+        rightC: 0,
+        boat: "left",
+        movement: "⬅ 1 Cannibal returns"
+    },
+
+    {
+        leftM: 0,
+        leftC: 1,
+        rightM: 3,
+        rightC: 2,
+        boat: "right",
+        movement: "➡ 2 Cannibals cross the river"
+    },
+
+    {
+        leftM: 0,
+        leftC: 2,
+        rightM: 3,
+        rightC: 1,
+        boat: "left",
+        movement: "⬅ 1 Cannibal returns"
+    },
+
+    {
+        leftM: 0,
+        leftC: 0,
+        rightM: 3,
+        rightC: 3,
+        boat: "right",
+        movement: "🎉 GOAL REACHED! Everyone crossed safely!"
+    }
+
+];
+
+
+let currentStep = 0;
+let timer = null;
+
+
+/*
+    Display current state
+*/
+function showStep(step) {
+
+    const state = states[step];
+
+    /*
+        Display people on left
+    */
+    document.getElementById("leftPeople").innerHTML =
+        createPeople(
+            state.leftM,
+            state.leftC
+        );
+
+
+    /*
+        Display people on right
+    */
+    document.getElementById("rightPeople").innerHTML =
+        createPeople(
+            state.rightM,
+            state.rightC
+        );
+
+
+    /*
+        Move boat
+    */
+    document.getElementById("boat").className =
+        "boat " + state.boat;
+
+
+    /*
+        Show movement
+    */
+    document.getElementById("movement").innerText =
+        state.movement;
+
+
+    /*
+        Highlight current step
+    */
+    for(let i = 0; i < states.length; i++) {
+
+        document
+            .getElementById("step" + i)
+            .classList.remove("active");
+
+    }
+
+    document
+        .getElementById("step" + step)
+        .classList.add("active");
+
+}
+
+
+/*
+    Next Step button
+*/
+function nextStep() {
+
+    if(currentStep < states.length - 1) {
+
+        currentStep++;
+
+        showStep(currentStep);
+
+    }
+
+}
+
+
+/*
+    Automatic animation
+*/
+function startSolution() {
+
+    if(timer !== null) {
+        clearInterval(timer);
+    }
+
+    currentStep = 0;
+
+    showStep(currentStep);
+
+    timer = setInterval(function() {
+
+        if(currentStep < states.length - 1) {
+
+            currentStep++;
+
+            showStep(currentStep);
+
+        }
+
+        else {
+
+            clearInterval(timer);
+
+            timer = null;
+
+        }
+
+    }, 1800);
+
+}
+
+
+/*
+    Reset
+*/
+function resetGame() {
+
+    if(timer !== null) {
+
+        clearInterval(timer);
+
+        timer = null;
+
+    }
+
+    currentStep = 0;
+
+    showStep(0);
+
+}
+
+
+/*
+    Start
+*/
+showStep(0);
+
+</script>
+
+</body>
+</html>
+```
